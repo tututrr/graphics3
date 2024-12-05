@@ -12,6 +12,12 @@ void saveImage(Mat* image, string name) {
     imwrite("/Users/hisoka/Downloads/graphics3/result/" + name, *image);
 }
 
+void printPoints(const vector<MyPoint>& points) {
+    for (const auto& point : points) {
+        cout << "(" << point.x << ", " << point.y << ")" << endl;
+    }
+}
+
 void Lines() {
    Mat lines = Mat::zeros({400, 400}, CV_8UC3);
 
@@ -19,6 +25,27 @@ void Lines() {
    drawLine(100, 100, 200, 300, lines, MAGENTA); 
    drawLine(200, 100, 100, 200, lines, MAGENTA);
    drawLine(300, 250, 350, 50, lines, WHITE);
+
+    vector<MyPoint> points1 = drawLine(0, 0, 8, 3, lines, CYAN);
+    cout << "Points for line from (0, 0) to (8, 3):" << endl;
+    printPoints(points1);
+
+    vector<MyPoint> points2 = drawLine(8, 3, 0, 0, lines, CYAN);
+    cout << "Points for line from (8, 3) to (0, 0):" << endl;
+    printPoints(points2);
+
+    vector<MyPoint> points3 = drawLine(0, 0, 3, 8, lines, CYAN);
+    cout << "Points for line from (0, 0) to (3, 8):" << endl;
+    printPoints(points3);
+
+    vector<MyPoint> points4 = drawLine(3, 8, 0, 0, lines, CYAN);
+    cout << "Points for line from (3, 8) to (0, 0):" << endl;
+    printPoints(points4);
+
+    vector<MyPoint> points5 = drawLine(0, 0, -8, 3, lines, CYAN);
+    cout << "Points for line from (0, 0) to (-8, 3):" << endl;
+    printPoints(points5);
+
 
    saveImage(&lines, "lines.jpg");
 }
@@ -137,7 +164,7 @@ void Intersections() {
         if (hasIntersections(shapes[i])) {
             color = MAGENTA;
         }
-        string method = (i & 1) == 0 ? "even" : "non"; //праивило окрашивания в зависимости от четности i
+        string method = "non";
         drawPolygon(shapes[i], intersectionsDraw, WHITE, color, method);
     }
 
@@ -191,8 +218,7 @@ void ConvexPolygons() {
         if (isConvex(shapes[i])) {
             color = PINK;
         }
-        string method = (i & 1) == 0 ? "even" : "non"; //праивило окрашивания в зависимости от четности i
-
+        string method = "even";
         drawPolygon(shapes[i], convexDraw, WHITE, color, method);
     }
 
