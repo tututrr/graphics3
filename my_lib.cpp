@@ -17,45 +17,69 @@ void fillBackground(Mat& image, Vec3b color) {
     }
 }
 
-
 vector<MyPoint> drawLine(int x1, int y1, int x2, int y2, Mat& image, Vec3b color) {
+    vector<MyPoint> points;
+
     int x = x1, y = y1;
     int dx = x2 - x1, dy = y2 - y1;
-    int ix = (dx > 0) ? 1 : (dx < 0) ? -1 : 0;  
-    int iy = (dy > 0) ? 1 : (dy < 0) ? -1 : 0;  
+    int e, i;
+    int ix = (dx > 0) - (dx < 0);  // -1, 0, or 1
+    int iy = (dy > 0) - (dy < 0);  // -1, 0, or 1
     dx = abs(dx);
     dy = abs(dy);
 
-    vector<MyPoint> points;
+    if (dx >= dy) {  // Основной алгоритм для наклонов с меньшим dx
+        e = 2 * dy - dx;
+        if (iy >= 0) {
+            for (i = 0; i <= dx; i++) {
+                points.push_back({x, y});
+                setPixel(x, y, image, color);
+                if (e >= 0) {
+                    y += iy;
+                    e -= 2 * dx;
+                }
+                x += ix;
+                e += 2 * dy;
+            }
+        } else {
+            for (i = 0; i <= dx; i++) {
+                points.push_back({x, y});
+                setPixel(x, y, image, color);
+                if (e > 0) {
+                    y += iy;
+                    e -= 2 * dx;
+                }
+                x += ix;
+                e += 2 * dy;
+            }
+        }
+    } else {  // Основной алгоритм для наклонов с меньшим dy
+        e = 2 * dx - dy;
+        if (ix >= 0) {
+            for (i = 0; i <= dy; i++) {
+                points.push_back({x, y});
+                setPixel(x, y, image, color);
+                if (e >= 0) {
+                    x += ix;
+                    e -= 2 * dy;
+                }
+                y += iy;
+                e += 2 * dx;
+            }
+        } else {
+            for (i = 0; i <= dy; i++) {
+                points.push_back({x, y});
+                setPixel(x, y, image, color);
+                if (e > 0) {
+                    x += ix;
+                    e -= 2 * dy;
+                }
+                y += iy;
+                e += 2 * dx;
+            }
+        }
+    }
 
-    if (dx >= dy) {
-        int a = 2 * dy - dx;  
-        for (int i = 0; i <= dx; i++) {
-            points.push_back({ x, y });
-            setPixel(x, y, image, color);
-            if (a >= 0) {  
-                y += iy;  
-                a -= 2 * dx;  
-            }
-            x += ix;  
-            a += 2 * dy;  
-        }
-    }
-    
-    else {
-        int a = 2 * dx - dy; 
-        for (int i = 0; i <= dy; i++) {
-            points.push_back({ x, y });
-            setPixel(x, y, image, color);  
-            if (a >= 0) {  
-                x += ix;   
-                a -= 2 * dy;  
-            }
-            y += iy; 
-            a += 2 * dx; 
-        }
-    }
-    
     return points;
 }
 
